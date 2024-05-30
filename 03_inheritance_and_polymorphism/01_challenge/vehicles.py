@@ -1,8 +1,8 @@
 # ここにコードを書いてください
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 
 class Vehicle(ABC):
-    @abstractclassmethod
+    @abstractmethod
     def __init__(self, make, model, year):
         self.make = make
         self.model = model
