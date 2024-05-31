@@ -1,0 +1,81 @@
+from abc import ABC, abstractmethod
+
+class Account(ABC):
+
+    def __init__(self, account_number, balance):
+        self.account_number = account_number
+        self.balance = balance
+        self.transaction_history = []
+    
+    @abstractmethod
+    def can_withdraw(self, amount):
+        pass
+
+    def deposit(self, amount):
+        self.balance += amount
+        self.transaction_history.append(f'Deposited: {amount}. Balance: {self.balance}')
+        return f"Deposited: {amount}. Balance: {self.balance}"
+
+    def withdraw(self, amount):
+        if self.can_withdraw(amount):
+            self.balance -= amount
+            self.transaction_history.append(f'Withdrew: {amount}. Balance: {self.balance}')
+            return f'Withdrew: {amount}. Balance: {self.balance}'
+        else:
+            return 'Insufficient balance'
+
+    def apply_interest(self):
+        pass
+
+    def get_transaction_history(self):
+        return self.transaction_history
+    
+    def __str__(self):
+        return f'Account No: {self.account_number}. Balance: {self.balance}'
+
+class SavingsAccount(Account):
+    def __init__(self, account_number, balance):
+        super().__init__(account_number, balance)
+        self.interest_rate = 0.01
+
+    def can_withdraw(self, amount):
+        return self.balance >= amount
+
+    def apply_interest(self):
+        self.balance += self.balance * self.interest_rate
+        self.transaction_history.append(f'Applied interest. Balance: {self.balance}')
+
+
+class CheckingAccount(Account):
+    def __init__(self, account_number, balance):
+        super().__init__(account_number, balance)
+        self.interest_rate = 0.005
+
+    def can_withdraw(self, amount):
+        return self.balance >= amount - 10
+
+    def apply_interest(self):
+        self.balance += self.balance * self.interest_rate
+        self.transaction_history.append(f'Applied interest. Balance: {self.balance}')
+
+
+
+alice_savings = SavingsAccount("123456", 1000)
+bob_checking = CheckingAccount("987654", 500)
+
+accounts = [alice_savings, bob_checking]
+
+print("Initial Account Details:")
+print(alice_savings)
+print(bob_checking)
+
+print(alice_savings.deposit(200))
+print(alice_savings.withdraw(500))
+print(bob_checking.deposit(300))
+print(bob_checking.withdraw(1000))
+
+print(alice_savings.get_transaction_history())
+print(bob_checking.get_transaction_history())
+
+print(alice_savings)
+print(bob_checking)
